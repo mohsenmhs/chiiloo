@@ -1,5 +1,5 @@
 .navbar {
-  background: linear-gradient(135deg, var(--saffron-red) 0%, var(--saffron-yellow-light) 100%);
+  background: linear-gradient(135deg, var(--saffron-yellow-light) 0%, var(--saffron-red) 100%);
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -12,6 +12,7 @@
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
 }
@@ -62,6 +63,19 @@
   transition: transform 0.3s ease;
 }
 
+.cartIconContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.cartIcon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Makes the icon white to match the navigation text */
+}
+
 .cartWink {
   animation: wink 0.6s ease-in-out;
 }
@@ -82,17 +96,22 @@
 }
 
 .cartBadge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
   background: var(--saffron-yellow);
   color: var(--black);
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  min-width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   line-height: 1;
+  padding: 0 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .badgePulse {
@@ -117,6 +136,7 @@
   border: none;
   cursor: pointer;
   padding: 5px;
+  order: -1;
 }
 
 .menuButton span {

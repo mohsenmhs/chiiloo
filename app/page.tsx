@@ -1,41 +1,164 @@
-import type { Metadata } from 'next'
+'use client'
+
+import { useState } from 'react'
 import styles from './page.module.css'
 import Link from 'next/link'
+import { useCart } from '@/contexts/CartContext'
+import productsData from '@/data/products.json'
+import Toast from '@/components/Toast'
+import bgImage from '@/assets/img/bg.jpg'
 
-export const metadata: Metadata = {
-  title: 'خانه - چیلو زعفران ممتاز',
-  description: 'به چیلو خوش آمدید، منبع شما برای زعفران با کیفیت ممتاز. بهترین محصولات زعفران با طعم و عطر اصیل را کشف کنید.',
+// Import product images directly
+import image1 from '@/assets/img/1.jpg'
+import image2 from '@/assets/img/2.jpg'
+import image3 from '@/assets/img/d.webp'
+import imageZe from '@/assets/img/ze.jpg'
+import imageA from '@/assets/img/a.jpg'
+import imageHa from '@/assets/img/ha.jpg'
+
+// Type definition for products
+interface Product {
+  id: number
+  name: string
+  description: string
+  price: string
+  weight: string
+  grade: string
+  image: string
 }
 
+// Helper function to get image src (handles both string and StaticImageData)
+const getImageSrc = (img: string | { src: string }): string => {
+  if (typeof img === 'string') return img
+  return img.src
+}
+
+// Map image paths to imported images
+const imageMap: { [key: string]: string } = {
+  '/img/1.jpg': getImageSrc(image1 as any),
+  '/img/2.jpg': getImageSrc(image2 as any),
+  '/img/d.webp': getImageSrc(image3 as any),
+  '/img/ze.jpg': getImageSrc(imageZe as any),
+  '/img/a.jpg': getImageSrc(imageA as any),
+  '/img/ha.jpg': getImageSrc(imageHa as any),
+}
+
+const products: Product[] = productsData.map(product => {
+  const mappedImage = imageMap[product.image] || product.image
+  return {
+    ...product,
+    image: mappedImage
+  }
+})
+
 export default function Home() {
+  const { addToCart, cart, updateQuantity } = useCart()
+  const [toastMessage, setToastMessage] = useState('')
+  const [showToast, setShowToast] = useState(false)
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      weight: product.weight,
+      grade: product.grade,
+    })
+    setToastMessage(`${product.name} به سبد خرید اضافه شد`)
+    setShowToast(true)
+  }
+
+  const handleUpdateQuantity = (productId: number, newQuantity: number) => {
+    updateQuantity(productId, newQuantity)
+  }
   return (
     <>
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            زعفران چیلو
-            <span className={styles.heroSubtitle}>
-              از دل مزارع روستای استند - قاینات
-            </span>
-          </h1>
-          <p className={styles.heroDescription}>
-            تجربه لوکس زعفران اصیل. مجموعه ممتاز ما بهترین کیفیت زعفران را با طعم غنی، 
-            رنگ زنده و عطر دلنواز برای شما به ارمغان می‌آورد.
-          </p>
-          <div className={styles.heroButtons}>
-            <Link href="/products/" className="btn btn-primary">
-              خرید کنید
-            </Link>
-            <Link href="/about/" className="btn btn-secondary">
-              بیشتر بدانید
-            </Link>
+      <Toast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+        duration={3000}
+      />
+      <section className={styles.hero} style={{ backgroundImage: `url(${getImageSrc(bgImage as any)})` }}>
+        <div className="container">
+          <div className={styles.heroContent}>
+            <div className={styles.heroText}>
+              <h1 className={styles.heroTitle}>
+                زعفران چیلو
+                <span className={styles.heroSubtitle}>
+                  از دل مزارع روستای استند - قاینات
+                </span>
+              </h1>
+              <p className={styles.heroDescription}>
+                تجربه لوکس زعفران اصیل. مجموعه ممتاز ما بهترین کیفیت زعفران را با طعم غنی، 
+                رنگ زنده و عطر دلنواز برای شما به ارمغان می‌آورد.
+              </p>
+              <div className={styles.heroButtons}>
+                <Link href="/products/" className="btn btn-primary">
+                  خرید کنید
+                </Link>
+                <Link href="/about/" className="btn btn-secondary">
+                  بیشتر بدانید
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className={styles.heroImage}>
-          <div className={styles.saffronVisual}>
-            <div className={styles.saffronStrand}></div>
-            <div className={styles.saffronStrand}></div>
-            <div className={styles.saffronStrand}></div>
+          
+          <div className={styles.heroProducts}>
+            <h2 className={styles.heroProductsTitle}>محصولات برتر</h2>
+            <div className={styles.heroProductsGrid}>
+              {products.slice(0, 5).map((product) => {
+                const cartItem = cart.find(item => item.id === product.id)
+                return (
+                  <div key={product.id} className={styles.heroProductCard}>
+                    <div className={styles.heroProductImage}>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className={styles.heroProductImageContent}
+                        loading="lazy"
+                      />
+                      <div className={styles.heroProductBadge}>{product.grade}</div>
+                    </div>
+                    <div className={styles.heroProductInfo}>
+                      <h3 className={styles.heroProductName}>{product.name}</h3>
+                      <div className={styles.heroProductDetails}>
+                        <span className={styles.heroProductWeight}>{product.weight}</span>
+                        <span className={styles.heroProductPrice}>{product.price}</span>
+                      </div>
+                      <div className={styles.heroProductFooter}>
+                        {cartItem ? (
+                          <div className={styles.heroQuantityControl}>
+                            <button
+                              className={styles.heroQuantityBtn}
+                              onClick={() => handleUpdateQuantity(product.id, cartItem.quantity - 1)}
+                              aria-label="کاهش تعداد"
+                            >
+                              −
+                            </button>
+                            <span className={styles.heroQuantity}>{cartItem.quantity}</span>
+                            <button
+                              className={styles.heroQuantityBtn}
+                              onClick={() => handleUpdateQuantity(product.id, cartItem.quantity + 1)}
+                              aria-label="افزایش تعداد"
+                            >
+                              +
+                            </button>
+                          </div>
+                        ) : (
+                          <button 
+                            className={styles.heroAddToCartBtn}
+                            onClick={() => handleAddToCart(product)}
+                          >
+                            افزودن به سبد
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -77,20 +200,6 @@ export default function Home() {
                 ما وفادار به مشتری های خود هستیم و به آنها خدمات بهتری را ارائه می‌کنیم.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className={`${styles.ctaSection} section`}>
-        <div className="container">
-          <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>آماده تجربه زعفران ممتاز هستید؟</h2>
-            <p className={styles.ctaText}>
-              مجموعه محصولات زعفران ممتاز ما را مرور کنید و خلاقیت‌های آشپزی خود را ارتقا دهید.
-            </p>
-            <Link href="/products/" className="btn btn-secondary">
-              مشاهده محصولات
-            </Link>
           </div>
         </div>
       </section>

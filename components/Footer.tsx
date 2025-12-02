@@ -27,6 +27,9 @@ export default function Footer() {
             <p className={styles.footerText}>
               تلفن: ۰۹۱۰۹۹۰۳۱۳۶
             </p>
+            <p className={styles.footerText}>
+              تلفن: ۰۹۱۵۷۸۶۱۴۳۰
+            </p>
           </div>
         </div>
         

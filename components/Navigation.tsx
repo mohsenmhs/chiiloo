@@ -8,6 +8,7 @@ import styles from './Navigation.module.css'
 
 // Import logo directly - Next.js webpack will handle this
 import logoImage from '@/assets/img/logo.png'
+import basketImage from '@/assets/img/basket.png'
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -63,12 +64,22 @@ export default function Navigation() {
               onClick={() => setIsMenuOpen(false)} 
               className={`${styles.cartLink} ${isWinking ? styles.cartWink : ''}`}
             >
+              <div className={styles.cartIconContainer}>
+                <Image
+                  src={basketImage}
+                  alt="سبد خرید"
+                  width={24}
+                  height={24}
+                  className={styles.cartIcon}
+                  unoptimized
+                />
+                {cartItemsCount > 0 && (
+                  <span className={`${styles.cartBadge} ${isWinking ? styles.badgePulse : ''}`}>
+                    {cartItemsCount}
+                  </span>
+                )}
+              </div>
               <span>سبد خرید</span>
-              {cartItemsCount > 0 && (
-                <span className={`${styles.cartBadge} ${isWinking ? styles.badgePulse : ''}`}>
-                  {cartItemsCount}
-                </span>
-              )}
             </Link>
           </li>
         </ul>
