@@ -129,13 +129,65 @@
   color: var(--white);
 }
 
+.discountSection {
+  padding: 1.5rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid var(--gray-light);
+}
+
+.discountInputGroup {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.discountInput {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid var(--gray-light);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  direction: rtl;
+}
+
+.discountInput:focus {
+  outline: none;
+  border-color: var(--saffron-purple);
+  box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.1);
+}
+
+.applyDiscountBtn {
+  background: linear-gradient(135deg, var(--saffron-red) 0%, var(--saffron-purple) 100%);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.applyDiscountBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
 .cartTotal {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 1.5rem 0;
   margin-top: 1rem;
   border-top: 2px solid var(--saffron-purple);
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .totalLabel {
@@ -148,6 +200,30 @@
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--saffron-red);
+}
+
+.discountLabel {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+}
+
+.discountAmount {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--saffron-red);
+}
+
+.finalLabel {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--saffron-purple);
+}
+
+.finalPrice {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--saffron-purple);
 }
 
 .orderForm {
@@ -225,6 +301,21 @@
   border-radius: 8px;
   text-align: center;
   border: 1px solid var(--saffron-red);
+}
+
+.discountError {
+  color: var(--saffron-red);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.discountSuccess {
+  color: #22c55e;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  display: block;
+  font-weight: 600;
 }
 
 .emptyCart {

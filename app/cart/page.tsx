@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
 }
 
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart()
+  const { cart, removeFromCart, updateQuantity, clearCart, getTotalPrice, getDiscountAmount, getFinalPrice } = useCart()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -23,8 +23,25 @@ export default function Cart() {
     address: '',
     notes: '',
   })
+  const [discountCode, setDiscountCode] = useState('')
+  const [appliedDiscountCode, setAppliedDiscountCode] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  
+  const isValidDiscount = appliedDiscountCode?.toLowerCase().trim() === 'khodadadiestend'
+  const discountAmount = getDiscountAmount(isValidDiscount ? appliedDiscountCode : undefined)
+  const baseTotal = getTotalPrice()
+  const finalTotal = getFinalPrice(isValidDiscount ? appliedDiscountCode : undefined)
+
+  const handleApplyDiscount = () => {
+    const code = discountCode.toLowerCase().trim()
+    if (code === 'khodadadiestend') {
+      setAppliedDiscountCode(discountCode)
+    } else {
+      alert('کد تخفیف نامعتبر است')
+      setAppliedDiscountCode(null)
+    }
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -53,11 +70,12 @@ export default function Cart() {
 شماره تماس: ${formData.phone}
 آدرس: ${formData.address}
 ${formData.notes ? `توضیحات: ${formData.notes}` : ''}
+${isValidDiscount ? `کد تخفیف: ${appliedDiscountCode}` : ''}
 
 محصولات سفارش:
 ${orderItems}
 
-مجموع کل: ${getTotalPrice()}
+${isValidDiscount ? `مجموع کل: ${baseTotal}\nتخفیف (۵٪): ${discountAmount.toLocaleString('fa-IR')} تومان\nمبلغ نهایی: ${finalTotal}` : `مجموع کل: ${finalTotal}`}
       `.trim()
 
       // EmailJS configuration
@@ -87,7 +105,10 @@ ${orderItems}
           phone: formData.phone,
           address: formData.address,
           notes: formData.notes || 'بدون توضیحات',
-          order_total: getTotalPrice(),
+          discount_code: isValidDiscount ? appliedDiscountCode : '',
+          discount_amount: isValidDiscount ? discountAmount.toLocaleString('fa-IR') + ' تومان' : '0',
+          order_total: finalTotal,
+          base_total: baseTotal,
         },
         publicKey
       )
@@ -101,6 +122,8 @@ ${orderItems}
         address: '',
         notes: '',
       })
+      setDiscountCode('')
+      setAppliedDiscountCode(null)
     } catch (error: any) {
       console.error('Error sending email:', error)
       const errorMessage = error?.message || 'خطا در ارسال سفارش'
@@ -193,9 +216,55 @@ ${orderItems}
                   </div>
                 </div>
               ))}
+              
+              <div className={styles.discountSection}>
+                <div className={styles.discountInputGroup}>
+                  <input
+                    type="text"
+                    value={discountCode}
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                    className={styles.discountInput}
+                    placeholder="کد تخفیف را وارد کنید"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleApplyDiscount()
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyDiscount}
+                    className={styles.applyDiscountBtn}
+                  >
+                    اعمال
+                  </button>
+                </div>
+                {appliedDiscountCode && isValidDiscount && (
+                  <span className={styles.discountSuccess}>✓ کد تخفیف اعمال شد (۵٪ تخفیف)</span>
+                )}
+                {appliedDiscountCode && !isValidDiscount && (
+                  <span className={styles.discountError}>کد تخفیف نامعتبر است</span>
+                )}
+              </div>
+
               <div className={styles.cartTotal}>
-                <span className={styles.totalLabel}>مجموع کل:</span>
-                <span className={styles.totalPrice}>{getTotalPrice()}</span>
+                <div className={styles.totalRow}>
+                  <span className={styles.totalLabel}>مجموع کل:</span>
+                  <span className={styles.totalPrice}>{baseTotal}</span>
+                </div>
+                {isValidDiscount && discountAmount > 0 && (
+                  <>
+                    <div className={styles.totalRow}>
+                      <span className={styles.discountLabel}>تخفیف (۵٪):</span>
+                      <span className={styles.discountAmount}>-{discountAmount.toLocaleString('fa-IR')} تومان</span>
+                    </div>
+                    <div className={styles.totalRow} style={{ borderTop: '2px solid var(--saffron-purple)', paddingTop: '1rem', marginTop: '0.5rem' }}>
+                      <span className={styles.finalLabel}>مبلغ نهایی:</span>
+                      <span className={styles.finalPrice}>{finalTotal}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 

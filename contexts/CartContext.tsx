@@ -18,7 +18,9 @@ interface CartContextType {
   updateQuantity: (id: number, quantity: number) => void
   clearCart: () => void
   getTotalItems: () => number
-  getTotalPrice: () => string
+  getTotalPrice: (discountCode?: string) => string
+  getDiscountAmount: (discountCode?: string) => number
+  getFinalPrice: (discountCode?: string) => string
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -81,36 +83,59 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cart.reduce((total, item) => total + item.quantity, 0)
   }
 
-  const getTotalPrice = () => {
-    // Convert Persian/Arabic digits to ASCII digits, then extract numeric value
-    const persianToEnglish = (str: string): string => {
-      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
-      const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
-      let result = str
-      
-      // Replace Persian digits
-      persianDigits.forEach((persian, index) => {
-        result = result.replace(new RegExp(persian, 'g'), index.toString())
-      })
-      
-      // Replace Arabic digits
-      arabicDigits.forEach((arabic, index) => {
-        result = result.replace(new RegExp(arabic, 'g'), index.toString())
-      })
-      
-      return result
-    }
+  // Helper function to convert Persian/Arabic digits to ASCII
+  const persianToEnglish = (str: string): string => {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
+    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
+    let result = str
     
-    const total = cart.reduce((sum, item) => {
-      // Convert Persian digits to English, then remove all non-digit characters
+    // Replace Persian digits
+    persianDigits.forEach((persian, index) => {
+      result = result.replace(new RegExp(persian, 'g'), index.toString())
+    })
+    
+    // Replace Arabic digits
+    arabicDigits.forEach((arabic, index) => {
+      result = result.replace(new RegExp(arabic, 'g'), index.toString())
+    })
+    
+    return result
+  }
+
+  // Calculate base total price (without discount)
+  const calculateBaseTotal = (): number => {
+    return cart.reduce((sum, item) => {
       const convertedPrice = persianToEnglish(item.price)
       const priceStr = convertedPrice.replace(/[^\d]/g, '')
       const price = parseInt(priceStr) || 0
       return sum + price * item.quantity
     }, 0)
-    
-    // Format with Persian number formatting
+  }
+
+  // Check if discount code is valid
+  const isValidDiscountCode = (code: string | undefined): boolean => {
+    return code?.toLowerCase().trim() === 'khodadadiestend'
+  }
+
+  // Get discount amount in numeric value
+  const getDiscountAmount = (discountCode?: string): number => {
+    if (!isValidDiscountCode(discountCode)) return 0
+    const baseTotal = calculateBaseTotal()
+    return Math.round(baseTotal * 0.05) // 5% discount
+  }
+
+  // Get total price (base price without discount)
+  const getTotalPrice = (discountCode?: string): string => {
+    const total = calculateBaseTotal()
     return total.toLocaleString('fa-IR') + ' تومان'
+  }
+
+  // Get final price after discount
+  const getFinalPrice = (discountCode?: string): string => {
+    const baseTotal = calculateBaseTotal()
+    const discount = getDiscountAmount(discountCode)
+    const finalTotal = baseTotal - discount
+    return finalTotal.toLocaleString('fa-IR') + ' تومان'
   }
 
   return (
@@ -123,6 +148,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         getTotalItems,
         getTotalPrice,
+        getDiscountAmount,
+        getFinalPrice,
       }}
     >
       {children}
