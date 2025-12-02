@@ -7,7 +7,10 @@ import styles from './page.module.css'
 // Import product images directly
 import image1 from '@/assets/img/1.jpg'
 import image2 from '@/assets/img/2.jpg'
-import image3 from '@/assets/img/3.jpg'
+import image3 from '@/assets/img/d.webp'
+import imageZe from '@/assets/img/ze.jpg'
+import imageA from '@/assets/img/a.jpg'
+import imageHa from '@/assets/img/ha.jpg'
 
 // Type definition for products
 interface Product {
@@ -30,7 +33,10 @@ const getImageSrc = (img: string | { src: string }): string => {
 const imageMap: { [key: string]: string } = {
   '/img/1.jpg': getImageSrc(image1 as any),
   '/img/2.jpg': getImageSrc(image2 as any),
-  '/img/3.jpg': getImageSrc(image3 as any),
+  '/img/d.webp': getImageSrc(image3 as any),
+  '/img/ze.jpg': getImageSrc(imageZe as any),
+  '/img/a.jpg': getImageSrc(imageA as any),
+  '/img/ha.jpg': getImageSrc(imageHa as any),
 }
 
 const products: Product[] = productsData.map(product => {
@@ -123,7 +129,7 @@ export default function Products() {
 
       <section className={`${styles.infoSection} section`}>
         <div className="container">
-          <h2 className="section-title" style={{ color: 'var(--white)' }}>ضمانت کیفیت</h2>
+          <h2 className="section-title" style={{ color: 'var(--white)', WebkitTextFillColor: 'var(--white)' }}>ضمانت کیفیت</h2>
           <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
               <h3>۱۰۰٪ اصیل</h3>

@@ -120,6 +120,12 @@ body {
   direction: rtl;
 }
 
+button {
+  font-family: 'IRANSansX', 'Tahoma', 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
 a {
   color: inherit;
   text-decoration: none;

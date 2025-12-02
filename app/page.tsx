@@ -13,8 +13,10 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            زعفران ممتاز
-            <span className={styles.heroSubtitle}>از بهترین منابع</span>
+            زعفران چیلو
+            <span className={styles.heroSubtitle}>
+              از دل مزارع روستای استند - قاینات
+            </span>
           </h1>
           <p className={styles.heroDescription}>
             تجربه لوکس زعفران اصیل. مجموعه ممتاز ما بهترین کیفیت زعفران را با طعم غنی، 
@@ -70,9 +72,9 @@ export default function Home() {
               <div className={styles.featureIcon}>
                 <span>🏆</span>
               </div>
-              <h3 className={styles.featureTitle}>برنده جایزه</h3>
+              <h3 className={styles.featureTitle}>وفادار به مشتری</h3>
               <p className={styles.featureText}>
-                به‌رسمیت شناخته شده برای برتری در کیفیت و طعم توسط متخصصان آشپزی در سراسر جهان.
+                ما وفادار به مشتری های خود هستیم و به آنها خدمات بهتری را ارائه می‌کنیم.
               </p>
             </div>
           </div>
@@ -86,7 +88,7 @@ export default function Home() {
             <p className={styles.ctaText}>
               مجموعه محصولات زعفران ممتاز ما را مرور کنید و خلاقیت‌های آشپزی خود را ارتقا دهید.
             </p>
-            <Link href="/products/" className="btn btn-primary">
+            <Link href="/products/" className="btn btn-secondary">
               مشاهده محصولات
             </Link>
           </div>

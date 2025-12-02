@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import styles from './page.module.css'
+
+// Import images
+import saffronImage from '@/assets/img/1.jpg'
+import zereshkImage from '@/assets/img/d.webp'
 
 export const metadata: Metadata = {
   title: 'درباره ما - چیلو زعفران ممتاز',
@@ -13,7 +18,7 @@ export default function About() {
         <div className="container">
           <h1 className={styles.heroTitle}>درباره چیلو</h1>
           <p className={styles.heroSubtitle}>
-            مشتاق ارائه بهترین زعفران جهان به شما
+            مشتاق ارائه بهترین زعفران به شما
           </p>
         </div>
       </section>
@@ -36,7 +41,14 @@ export default function About() {
             </div>
             
             <div className={styles.imagePlaceholder}>
-              <div className={styles.saffronPattern}></div>
+              <Image
+                src={saffronImage}
+                alt="زعفران ممتاز"
+                fill
+                className={styles.aboutImage}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
+              />
             </div>
           </div>
         </div>
@@ -44,7 +56,7 @@ export default function About() {
 
       <section className={`${styles.valuesSection} section`}>
         <div className="container">
-          <h2 className="section-title" style={{ color: 'var(--white)' }}>ارزش‌های ما</h2>
+          <h2 className="section-title" style={{ color: 'var(--white)', WebkitTextFillColor: 'var(--white)' }}>ارزش‌های ما</h2>
           
           <div className={styles.values}>
             <div className={styles.value}>
@@ -78,7 +90,14 @@ export default function About() {
         <div className="container">
           <div className={styles.content}>
             <div className={styles.imagePlaceholder}>
-              <div className={styles.saffronPattern}></div>
+              <Image
+                src={zereshkImage}
+                alt="زرشک ممتاز"
+                fill
+                className={styles.aboutImage}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
+              />
             </div>
             
             <div className={styles.textSection}>
