@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useCart } from '@/contexts/CartContext'
 import styles from './Navigation.module.css'
 
@@ -11,8 +11,22 @@ import logoImage from '@/assets/img/logo.png'
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isWinking, setIsWinking] = useState(false)
   const { getTotalItems } = useCart()
   const cartItemsCount = getTotalItems()
+  const prevCartCountRef = useRef(cartItemsCount)
+
+  // Trigger winking animation when cart items increase
+  useEffect(() => {
+    if (cartItemsCount > prevCartCountRef.current) {
+      setIsWinking(true)
+      const timer = setTimeout(() => {
+        setIsWinking(false)
+      }, 1000) // Animation duration
+      return () => clearTimeout(timer)
+    }
+    prevCartCountRef.current = cartItemsCount
+  }, [cartItemsCount])
 
   return (
     <nav className={styles.navbar}>
@@ -44,10 +58,16 @@ export default function Navigation() {
           <li><Link href="/about/" onClick={() => setIsMenuOpen(false)}>درباره ما</Link></li>
           <li><Link href="/products/" onClick={() => setIsMenuOpen(false)}>محصولات</Link></li>
           <li>
-            <Link href="/cart/" onClick={() => setIsMenuOpen(false)} className={styles.cartLink}>
+            <Link 
+              href="/cart/" 
+              onClick={() => setIsMenuOpen(false)} 
+              className={`${styles.cartLink} ${isWinking ? styles.cartWink : ''}`}
+            >
               <span>سبد خرید</span>
               {cartItemsCount > 0 && (
-                <span className={styles.cartBadge}>{cartItemsCount}</span>
+                <span className={`${styles.cartBadge} ${isWinking ? styles.badgePulse : ''}`}>
+                  {cartItemsCount}
+                </span>
               )}
             </Link>
           </li>

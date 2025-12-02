@@ -1,7 +1,10 @@
 'use client'
 
+import { useState } from 'react'
+import Link from 'next/link'
 import { useCart } from '@/contexts/CartContext'
 import productsData from '@/data/products.json'
+import Toast from '@/components/Toast'
 import styles from './page.module.css'
 
 // Import product images directly
@@ -52,7 +55,9 @@ const products: Product[] = productsData.map(product => {
 })
 
 export default function Products() {
-  const { addToCart } = useCart()
+  const { addToCart, cart, updateQuantity, getTotalItems } = useCart()
+  const [toastMessage, setToastMessage] = useState('')
+  const [showToast, setShowToast] = useState(false)
 
   const handleAddToCart = (product: typeof products[0]) => {
     addToCart({
@@ -62,10 +67,24 @@ export default function Products() {
       weight: product.weight,
       grade: product.grade,
     })
+
+    // Show notification
+    setToastMessage(`${product.name} به سبد خرید اضافه شد`)
+    setShowToast(true)
+  }
+
+  const handleUpdateQuantity = (productId: number, newQuantity: number) => {
+    updateQuantity(productId, newQuantity)
   }
 
   return (
     <>
+      <Toast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+        duration={3000}
+      />
       <section className={styles.hero}>
         <div className="container">
           <h1 className={styles.heroTitle}>محصولات ما</h1>
@@ -113,13 +132,44 @@ export default function Products() {
                   </div>
                   <div className={styles.productFooter}>
                     <span className={styles.productPrice}>{product.price}</span>
-                    <button 
-                      className={styles.addToCartBtn}
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      افزودن به سبد
-                    </button>
+                    {(() => {
+                      const cartItem = cart.find(item => item.id === product.id)
+                      if (cartItem) {
+                        return (
+                          <div className={styles.quantityControl}>
+                            <button
+                              className={styles.quantityBtn}
+                              onClick={() => handleUpdateQuantity(product.id, cartItem.quantity - 1)}
+                              aria-label="کاهش تعداد"
+                            >
+                              −
+                            </button>
+                            <span className={styles.quantity}>{cartItem.quantity}</span>
+                            <button
+                              className={styles.quantityBtn}
+                              onClick={() => handleUpdateQuantity(product.id, cartItem.quantity + 1)}
+                              aria-label="افزایش تعداد"
+                            >
+                              +
+                            </button>
+                          </div>
+                        )
+                      }
+                      return (
+                        <button 
+                          className={styles.addToCartBtn}
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          افزودن به سبد
+                        </button>
+                      )
+                    })()}
                   </div>
+                  {cart.length > 0 && (
+                    <Link href="/cart/" className={styles.cartLink}>
+                      مشاهده سبد خرید ({getTotalItems()})
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}

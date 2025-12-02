@@ -143,6 +143,67 @@
   box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
 }
 
+.quantityControl {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--gray-light);
+  border-radius: 8px;
+  padding: 0.25rem;
+}
+
+.quantityBtn {
+  background: linear-gradient(135deg, var(--saffron-red) 0%, var(--saffron-purple) 100%);
+  color: var(--white);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.quantityBtn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
+}
+
+.quantityBtn:active {
+  transform: scale(0.95);
+}
+
+.quantity {
+  min-width: 30px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--saffron-purple);
+}
+
+.cartLink {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-light);
+  color: var(--saffron-purple);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.cartLink:hover {
+  color: var(--saffron-red);
+  text-decoration: underline;
+}
+
 .infoSection {
   background: linear-gradient(135deg, var(--saffron-purple) 0%, var(--saffron-red) 100%);
   color: var(--white);
@@ -196,6 +257,11 @@
 
   .addToCartBtn {
     width: 100%;
+  }
+
+  .quantityControl {
+    width: 100%;
+    justify-content: center;
   }
 }
 
