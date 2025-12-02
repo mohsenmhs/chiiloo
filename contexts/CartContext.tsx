@@ -82,9 +82,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }
 
   const getTotalPrice = () => {
-    // Extract numeric value from price string (removing تومان and commas)
+    // Convert Persian/Arabic digits to ASCII digits, then extract numeric value
+    const persianToEnglish = (str: string): string => {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
+      const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
+      let result = str
+      
+      // Replace Persian digits
+      persianDigits.forEach((persian, index) => {
+        result = result.replace(new RegExp(persian, 'g'), index.toString())
+      })
+      
+      // Replace Arabic digits
+      arabicDigits.forEach((arabic, index) => {
+        result = result.replace(new RegExp(arabic, 'g'), index.toString())
+      })
+      
+      return result
+    }
+    
     const total = cart.reduce((sum, item) => {
-      const priceStr = item.price.replace(/[^\d]/g, '')
+      // Convert Persian digits to English, then remove all non-digit characters
+      const convertedPrice = persianToEnglish(item.price)
+      const priceStr = convertedPrice.replace(/[^\d]/g, '')
       const price = parseInt(priceStr) || 0
       return sum + price * item.quantity
     }, 0)

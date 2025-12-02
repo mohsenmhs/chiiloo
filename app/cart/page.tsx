@@ -21,6 +21,7 @@ export default function Cart() {
     lastName: '',
     phone: '',
     address: '',
+    notes: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -51,6 +52,7 @@ export default function Cart() {
 نام و نام خانوادگی: ${formData.firstName} ${formData.lastName}
 شماره تماس: ${formData.phone}
 آدرس: ${formData.address}
+${formData.notes ? `توضیحات: ${formData.notes}` : ''}
 
 محصولات سفارش:
 ${orderItems}
@@ -84,6 +86,7 @@ ${orderItems}
           message: orderDetails,
           phone: formData.phone,
           address: formData.address,
+          notes: formData.notes || 'بدون توضیحات',
           order_total: getTotalPrice(),
         },
         publicKey
@@ -96,6 +99,7 @@ ${orderItems}
         lastName: '',
         phone: '',
         address: '',
+        notes: '',
       })
     } catch (error: any) {
       console.error('Error sending email:', error)
@@ -260,6 +264,21 @@ ${orderItems}
                     className={styles.textarea}
                     rows={4}
                     placeholder="آدرس کامل خود را وارد کنید"
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="notes" className={styles.label}>
+                    توضیحات (اختیاری)
+                  </label>
+                  <textarea
+                    id="notes"
+                    name="notes"
+                    value={formData.notes}
+                    onChange={handleInputChange}
+                    className={styles.textarea}
+                    rows={3}
+                    placeholder="هر توضیح یا درخواست اضافی را اینجا بنویسید..."
                   />
                 </div>
 
