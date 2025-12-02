@@ -2,14 +2,15 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { CartProvider } from '@/contexts/CartContext'
 
 export const metadata: Metadata = {
-  title: 'Chiiloo - Premium Saffron Shop',
-  description: 'Discover the finest quality saffron from Chiiloo. Premium saffron products with authentic flavor and aroma.',
-  keywords: 'saffron, premium saffron, spice, Chiiloo, quality saffron',
+  title: 'چیلو - فروشگاه زعفران ممتاز',
+  description: 'کشف بهترین کیفیت زعفران از چیلو. محصولات زعفران ممتاز با طعم و عطر اصیل.',
+  keywords: 'زعفران, زعفران ممتاز, ادویه, چیلو, زعفران با کیفیت',
   openGraph: {
-    title: 'Chiiloo - Premium Saffron Shop',
-    description: 'Discover the finest quality saffron from Chiiloo',
+    title: 'چیلو - فروشگاه زعفران ممتاز',
+    description: 'کشف بهترین کیفیت زعفران از چیلو',
     type: 'website',
   },
 }
@@ -20,14 +21,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="fa" dir="rtl">
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
+        <CartProvider>
+          <Navigation />
+          <main>{children}</main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   )

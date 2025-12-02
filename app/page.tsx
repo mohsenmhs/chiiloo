@@ -3,8 +3,8 @@ import styles from './page.module.css'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Home - Chiiloo Premium Saffron',
-  description: 'Welcome to Chiiloo, your source for premium quality saffron. Discover the finest saffron products with authentic flavor and aroma.',
+  title: 'خانه - چیلو زعفران ممتاز',
+  description: 'به چیلو خوش آمدید، منبع شما برای زعفران با کیفیت ممتاز. بهترین محصولات زعفران با طعم و عطر اصیل را کشف کنید.',
 }
 
 export default function Home() {
@@ -13,19 +13,19 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            Premium Saffron
-            <span className={styles.heroSubtitle}>From the Finest Sources</span>
+            زعفران ممتاز
+            <span className={styles.heroSubtitle}>از بهترین منابع</span>
           </h1>
           <p className={styles.heroDescription}>
-            Experience the luxury of authentic saffron. Our premium collection brings you 
-            the finest quality saffron with rich flavor, vibrant color, and exquisite aroma.
+            تجربه لوکس زعفران اصیل. مجموعه ممتاز ما بهترین کیفیت زعفران را با طعم غنی، 
+            رنگ زنده و عطر دلنواز برای شما به ارمغان می‌آورد.
           </p>
           <div className={styles.heroButtons}>
             <Link href="/products/" className="btn btn-primary">
-              Shop Now
+              خرید کنید
             </Link>
             <Link href="/about/" className="btn btn-secondary">
-              Learn More
+              بیشتر بدانید
             </Link>
           </div>
         </div>
@@ -40,9 +40,9 @@ export default function Home() {
 
       <section className="section">
         <div className="container">
-          <h2 className="section-title">Why Choose Chiiloo?</h2>
+          <h2 className="section-title">چرا چیلو را انتخاب کنیم؟</h2>
           <p className="section-subtitle">
-            We source only the finest saffron, ensuring premium quality and authentic flavor in every product.
+            ما فقط بهترین زعفران را تهیه می‌کنیم و کیفیت ممتاز و طعم اصیل را در هر محصول تضمین می‌کنیم.
           </p>
           
           <div className={styles.features}>
@@ -50,9 +50,9 @@ export default function Home() {
               <div className={styles.featureIcon}>
                 <span>✨</span>
               </div>
-              <h3 className={styles.featureTitle}>Premium Quality</h3>
+              <h3 className={styles.featureTitle}>کیفیت ممتاز</h3>
               <p className={styles.featureText}>
-                Hand-picked saffron threads from the finest sources, ensuring maximum flavor and aroma.
+                رشته‌های زعفران دستچین شده از بهترین منابع، با تضمین حداکثر طعم و عطر.
               </p>
             </div>
             
@@ -60,9 +60,9 @@ export default function Home() {
               <div className={styles.featureIcon}>
                 <span>🌿</span>
               </div>
-              <h3 className={styles.featureTitle}>100% Natural</h3>
+              <h3 className={styles.featureTitle}>۱۰۰٪ طبیعی</h3>
               <p className={styles.featureText}>
-                Pure, natural saffron with no additives or preservatives. Authentic taste guaranteed.
+                زعفران خالص و طبیعی بدون هیچ افزودنی یا نگهدارنده. طعم اصیل تضمین شده.
               </p>
             </div>
             
@@ -70,9 +70,9 @@ export default function Home() {
               <div className={styles.featureIcon}>
                 <span>🏆</span>
               </div>
-              <h3 className={styles.featureTitle}>Award Winning</h3>
+              <h3 className={styles.featureTitle}>برنده جایزه</h3>
               <p className={styles.featureText}>
-                Recognized for excellence in quality and flavor by culinary experts worldwide.
+                به‌رسمیت شناخته شده برای برتری در کیفیت و طعم توسط متخصصان آشپزی در سراسر جهان.
               </p>
             </div>
           </div>
@@ -82,12 +82,12 @@ export default function Home() {
       <section className={`${styles.ctaSection} section`}>
         <div className="container">
           <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>Ready to Experience Premium Saffron?</h2>
+            <h2 className={styles.ctaTitle}>آماده تجربه زعفران ممتاز هستید؟</h2>
             <p className={styles.ctaText}>
-              Browse our collection of premium saffron products and elevate your culinary creations.
+              مجموعه محصولات زعفران ممتاز ما را مرور کنید و خلاقیت‌های آشپزی خود را ارتقا دهید.
             </p>
             <Link href="/products/" className="btn btn-primary">
-              View Products
+              مشاهده محصولات
             </Link>
           </div>
         </div>

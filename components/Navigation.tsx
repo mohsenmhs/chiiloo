@@ -1,24 +1,38 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
+import { useCart } from '@/contexts/CartContext'
 import styles from './Navigation.module.css'
+
+// Import logo directly - Next.js webpack will handle this
+import logoImage from '@/assets/img/logo.png'
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { getTotalItems } = useCart()
+  const cartItemsCount = getTotalItems()
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          <span className={styles.logoText}>Chiiloo</span>
-          <span className={styles.logoSubtext}>Premium Saffron</span>
+          <Image 
+            src={logoImage}
+            alt="چیلو - زعفران ممتاز" 
+            width={120}
+            height={60}
+            className={styles.logoImage}
+            unoptimized
+            priority
+          />
         </Link>
         
         <button 
           className={styles.menuButton}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
+          aria-label="منو"
         >
           <span></span>
           <span></span>
@@ -26,9 +40,17 @@ export default function Navigation() {
         </button>
 
         <ul className={`${styles.navLinks} ${isMenuOpen ? styles.navLinksOpen : ''}`}>
-          <li><Link href="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
-          <li><Link href="/about/" onClick={() => setIsMenuOpen(false)}>About</Link></li>
-          <li><Link href="/products/" onClick={() => setIsMenuOpen(false)}>Products</Link></li>
+          <li><Link href="/" onClick={() => setIsMenuOpen(false)}>خانه</Link></li>
+          <li><Link href="/about/" onClick={() => setIsMenuOpen(false)}>درباره ما</Link></li>
+          <li><Link href="/products/" onClick={() => setIsMenuOpen(false)}>محصولات</Link></li>
+          <li>
+            <Link href="/cart/" onClick={() => setIsMenuOpen(false)} className={styles.cartLink}>
+              <span>سبد خرید</span>
+              {cartItemsCount > 0 && (
+                <span className={styles.cartBadge}>{cartItemsCount}</span>
+              )}
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

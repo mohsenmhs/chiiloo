@@ -7,32 +7,32 @@ export default function Footer() {
       <div className={styles.container}>
         <div className={styles.footerContent}>
           <div className={styles.footerSection}>
-            <h3 className={styles.footerTitle}>Chiiloo</h3>
+            <h3 className={styles.footerTitle}>چیلو</h3>
             <p className={styles.footerText}>
-              Premium quality saffron for the finest culinary experiences.
+              زعفران با کیفیت ممتاز برای بهترین تجربیات آشپزی.
             </p>
           </div>
           
           <div className={styles.footerSection}>
-            <h4 className={styles.footerHeading}>Quick Links</h4>
+            <h4 className={styles.footerHeading}>لینک‌های سریع</h4>
             <ul className={styles.footerLinks}>
-              <li><Link href="/">Home</Link></li>
-              <li><Link href="/about/">About</Link></li>
-              <li><Link href="/products/">Products</Link></li>
+              <li><Link href="/">خانه</Link></li>
+              <li><Link href="/about/">درباره ما</Link></li>
+              <li><Link href="/products/">محصولات</Link></li>
             </ul>
           </div>
           
           <div className={styles.footerSection}>
-            <h4 className={styles.footerHeading}>Contact</h4>
+            <h4 className={styles.footerHeading}>تماس با ما</h4>
             <p className={styles.footerText}>
-              Email: info@chiiloo.com<br />
-              Phone: +1 (555) 123-4567
+              ایمیل: info@chiiloo.com<br />
+              تلفن: ۰۲۱-۱۲۳۴۵۶۷۸
             </p>
           </div>
         </div>
         
         <div className={styles.footerBottom}>
-          <p>&copy; {new Date().getFullYear()} Chiiloo. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} چیلو. تمامی حقوق محفوظ است.</p>
         </div>
       </div>
     </footer>

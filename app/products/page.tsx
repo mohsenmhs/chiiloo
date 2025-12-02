@@ -1,71 +1,70 @@
-import type { Metadata } from 'next'
+'use client'
+
+import { useCart } from '@/contexts/CartContext'
+import productsData from '@/data/products.json'
 import styles from './page.module.css'
 
-export const metadata: Metadata = {
-  title: 'Products - Chiiloo Premium Saffron',
-  description: 'Browse our collection of premium saffron products. From premium threads to saffron powder, find the perfect saffron for your culinary needs.',
-  keywords: 'saffron products, premium saffron, saffron threads, saffron powder, buy saffron',
+// Import product images directly
+import image1 from '@/assets/img/1.jpg'
+import image2 from '@/assets/img/2.jpg'
+import image3 from '@/assets/img/3.jpg'
+
+// Type definition for products
+interface Product {
+  id: number
+  name: string
+  description: string
+  price: string
+  weight: string
+  grade: string
+  image: string
 }
 
-const products = [
-  {
-    id: 1,
-    name: 'Premium Saffron Threads',
-    description: 'Hand-picked premium saffron threads with intense flavor and vibrant color. Perfect for rice dishes, desserts, and beverages.',
-    price: '$29.99',
-    weight: '1g',
-    grade: 'Grade A',
-  },
-  {
-    id: 2,
-    name: 'Deluxe Saffron Collection',
-    description: 'Our finest selection of saffron threads, carefully sorted for maximum quality. Ideal for special occasions and gourmet cooking.',
-    price: '$59.99',
-    weight: '2g',
-    grade: 'Premium',
-  },
-  {
-    id: 3,
-    name: 'Saffron Powder',
-    description: 'Finely ground premium saffron powder for easy use in recipes. Maintains the authentic flavor and aroma of whole threads.',
-    price: '$24.99',
-    weight: '1g',
-    grade: 'Grade A',
-  },
-  {
-    id: 4,
-    name: 'Saffron Gift Set',
-    description: 'A beautiful gift set containing premium saffron threads and a recipe booklet. Perfect for saffron enthusiasts.',
-    price: '$79.99',
-    weight: '3g',
-    grade: 'Premium',
-  },
-  {
-    id: 5,
-    name: 'Culinary Saffron Pack',
-    description: 'A practical pack of saffron threads designed for everyday cooking. Great value for regular use.',
-    price: '$19.99',
-    weight: '0.5g',
-    grade: 'Grade A',
-  },
-  {
-    id: 6,
-    name: 'Luxury Saffron Reserve',
-    description: 'Our most exclusive saffron collection, featuring the rarest and finest threads. For the ultimate culinary experience.',
-    price: '$149.99',
-    weight: '5g',
-    grade: 'Reserve',
-  },
-]
+// Helper function to get image src (handles both string and StaticImageData)
+const getImageSrc = (img: string | { src: string }): string => {
+  if (typeof img === 'string') return img
+  return img.src
+}
+
+// Map image paths to imported images
+const imageMap: { [key: string]: string } = {
+  '/img/1.jpg': getImageSrc(image1 as any),
+  '/img/2.jpg': getImageSrc(image2 as any),
+  '/img/3.jpg': getImageSrc(image3 as any),
+}
+
+const products: Product[] = productsData.map(product => {
+  const mappedImage = imageMap[product.image] || product.image
+  // Debug: log image paths
+  if (typeof window !== 'undefined') {
+    console.log(`Product ${product.id} image:`, product.image, '->', mappedImage)
+  }
+  return {
+    ...product,
+    image: mappedImage
+  }
+})
 
 export default function Products() {
+  const { addToCart } = useCart()
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      weight: product.weight,
+      grade: product.grade,
+    })
+  }
+
   return (
     <>
       <section className={styles.hero}>
         <div className="container">
-          <h1 className={styles.heroTitle}>Our Products</h1>
+          <h1 className={styles.heroTitle}>محصولات ما</h1>
           <p className={styles.heroSubtitle}>
-            Discover our premium collection of saffron products
+            مجموعه ممتاز محصولات زعفران ما را کشف کنید
           </p>
         </div>
       </section>
@@ -76,7 +75,28 @@ export default function Products() {
             {products.map((product) => (
               <div key={product.id} className={styles.productCard}>
                 <div className={styles.productImage}>
-                  <div className={styles.saffronIcon}>🌿</div>
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className={styles.productImageContent}
+                    loading="lazy"
+                    onError={(e) => {
+                      // Fallback to placeholder if image fails to load
+                      console.error('Image failed to load:', product.image, 'for product:', product.name)
+                      const target = e.target as HTMLImageElement
+                      target.style.display = 'none'
+                      const parent = target.parentElement
+                      if (parent && !parent.querySelector(`.${styles.saffronIcon}`)) {
+                        const icon = document.createElement('div')
+                        icon.className = styles.saffronIcon
+                        icon.textContent = '🌿'
+                        parent.appendChild(icon)
+                      }
+                    }}
+                    onLoad={() => {
+                      console.log('Image loaded successfully:', product.image)
+                    }}
+                  />
                   <div className={styles.productBadge}>{product.grade}</div>
                 </div>
                 <div className={styles.productInfo}>
@@ -87,7 +107,12 @@ export default function Products() {
                   </div>
                   <div className={styles.productFooter}>
                     <span className={styles.productPrice}>{product.price}</span>
-                    <button className={styles.addToCartBtn}>Add to Cart</button>
+                    <button 
+                      className={styles.addToCartBtn}
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      افزودن به سبد
+                    </button>
                   </div>
                 </div>
               </div>
@@ -98,19 +123,19 @@ export default function Products() {
 
       <section className={`${styles.infoSection} section`}>
         <div className="container">
-          <h2 className="section-title" style={{ color: 'var(--white)' }}>Quality Guarantee</h2>
+          <h2 className="section-title" style={{ color: 'var(--white)' }}>ضمانت کیفیت</h2>
           <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
-              <h3>100% Authentic</h3>
-              <p>All our saffron is tested and verified for authenticity</p>
+              <h3>۱۰۰٪ اصیل</h3>
+              <p>تمام زعفران ما برای اصالت آزمایش و تأیید شده است</p>
             </div>
             <div className={styles.infoItem}>
-              <h3>Premium Grade</h3>
-              <p>Only the highest quality saffron threads make it to our collection</p>
+              <h3>درجه ممتاز</h3>
+              <p>فقط با کیفیت‌ترین رشته‌های زعفران به مجموعه ما راه می‌یابند</p>
             </div>
             <div className={styles.infoItem}>
-              <h3>Fresh & Potent</h3>
-              <p>Carefully stored to maintain maximum flavor and aroma</p>
+              <h3>تازه و قوی</h3>
+              <p>با دقت نگهداری شده تا حداکثر طعم و عطر حفظ شود</p>
             </div>
           </div>
         </div>

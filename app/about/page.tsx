@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
-  title: 'About Us - Chiiloo Premium Saffron',
-  description: 'Learn about Chiiloo and our commitment to providing the finest quality saffron. Discover our story, values, and dedication to excellence.',
+  title: 'درباره ما - چیلو زعفران ممتاز',
+  description: 'درباره چیلو و تعهد ما برای ارائه بهترین کیفیت زعفران بیاموزید. داستان، ارزش‌ها و تعهد ما به تعالی را کشف کنید.',
 }
 
 export default function About() {
@@ -11,9 +11,9 @@ export default function About() {
     <>
       <section className={styles.hero}>
         <div className="container">
-          <h1 className={styles.heroTitle}>About Chiiloo</h1>
+          <h1 className={styles.heroTitle}>درباره چیلو</h1>
           <p className={styles.heroSubtitle}>
-            Passionate about bringing you the world's finest saffron
+            مشتاق ارائه بهترین زعفران جهان به شما
           </p>
         </div>
       </section>
@@ -22,16 +22,16 @@ export default function About() {
         <div className="container">
           <div className={styles.content}>
             <div className={styles.textSection}>
-              <h2 className={styles.sectionTitle}>Our Story</h2>
+              <h2 className={styles.sectionTitle}>داستان ما</h2>
               <p className={styles.text}>
-                Chiiloo was born from a passion for quality and a deep appreciation for the 
-                culinary arts. We recognized that saffron, often called the "king of spices," 
-                deserves to be sourced and presented with the utmost care and respect.
+                چیلو از علاقه به کیفیت و قدردانی عمیق از هنر آشپزی متولد شد. ما تشخیص دادیم که 
+                زعفران، که اغلب "پادشاه ادویه‌ها" نامیده می‌شود، شایسته تهیه و ارائه با 
+                بیشترین مراقبت و احترام است.
               </p>
               <p className={styles.text}>
-                Our journey began with a simple mission: to make premium quality saffron 
-                accessible to home cooks and professional chefs alike. We carefully select 
-                each batch, ensuring that only the finest threads make it to your kitchen.
+                سفر ما با یک ماموریت ساده آغاز شد: دسترسی به زعفران با کیفیت ممتاز را برای 
+                آشپزهای خانگی و سرآشپزهای حرفه‌ای فراهم کنیم. ما هر دسته را با دقت انتخاب می‌کنیم 
+                و اطمینان می‌دهیم که فقط بهترین رشته‌ها به آشپزخانه شما می‌رسند.
               </p>
             </div>
             
@@ -44,30 +44,30 @@ export default function About() {
 
       <section className={`${styles.valuesSection} section`}>
         <div className="container">
-          <h2 className="section-title" style={{ color: 'var(--white)' }}>Our Values</h2>
+          <h2 className="section-title" style={{ color: 'var(--white)' }}>ارزش‌های ما</h2>
           
           <div className={styles.values}>
             <div className={styles.value}>
-              <h3 className={styles.valueTitle}>Quality First</h3>
+              <h3 className={styles.valueTitle}>کیفیت در اولویت</h3>
               <p className={styles.valueText}>
-                We never compromise on quality. Every product undergoes rigorous testing 
-                to ensure it meets our high standards.
+                ما هرگز در کیفیت سازش نمی‌کنیم. هر محصول تحت آزمایش‌های دقیق قرار می‌گیرد 
+                تا اطمینان حاصل شود که استانداردهای بالای ما را برآورده می‌کند.
               </p>
             </div>
             
             <div className={styles.value}>
-              <h3 className={styles.valueTitle}>Authenticity</h3>
+              <h3 className={styles.valueTitle}>اصالت</h3>
               <p className={styles.valueText}>
-                We source directly from trusted growers, ensuring authenticity and 
-                traceability in every purchase.
+                ما مستقیماً از کشاورزان مورد اعتماد تهیه می‌کنیم و اصالت و 
+                قابلیت ردیابی را در هر خرید تضمین می‌کنیم.
               </p>
             </div>
             
             <div className={styles.value}>
-              <h3 className={styles.valueTitle}>Sustainability</h3>
+              <h3 className={styles.valueTitle}>پایداری</h3>
               <p className={styles.valueText}>
-                We are committed to sustainable practices that support local communities 
-                and protect the environment.
+                ما متعهد به شیوه‌های پایدار هستیم که از جوامع محلی حمایت می‌کند 
+                و از محیط زیست محافظت می‌کند.
               </p>
             </div>
           </div>
@@ -82,17 +82,15 @@ export default function About() {
             </div>
             
             <div className={styles.textSection}>
-              <h2 className={styles.sectionTitle}>Why Saffron?</h2>
+              <h2 className={styles.sectionTitle}>چرا زعفران؟</h2>
               <p className={styles.text}>
-                Saffron is more than just a spice—it's a symbol of luxury, tradition, 
-                and culinary excellence. With its distinctive flavor, vibrant color, 
-                and aromatic properties, saffron has been treasured for thousands of years.
+                زعفران بیش از یک ادویه است—نمادی از لوکس، سنت و برتری آشپزی است. 
+                با طعم متمایز، رنگ زنده و خواص معطر، زعفران برای هزاران سال گرامی داشته شده است.
               </p>
               <p className={styles.text}>
-                At Chiiloo, we believe that everyone should have access to premium saffron 
-                that elevates their cooking. Whether you're preparing a special meal or 
-                experimenting with new recipes, our saffron will add that perfect touch 
-                of elegance and flavor.
+                در چیلو، ما معتقدیم که همه باید به زعفران ممتازی دسترسی داشته باشند که 
+                آشپزی آنها را ارتقا دهد. چه در حال آماده کردن یک وعده غذایی خاص باشید یا 
+                در حال آزمایش دستورهای جدید، زعفران ما آن لمس کامل از ظرافت و طعم را اضافه می‌کند.
               </p>
             </div>
           </div>
