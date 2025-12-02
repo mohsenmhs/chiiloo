@@ -25,8 +25,7 @@ export default function Footer() {
           <div className={styles.footerSection}>
             <h4 className={styles.footerHeading}>تماس با ما</h4>
             <p className={styles.footerText}>
-              ایمیل: info@chiiloo.com<br />
-              تلفن: ۰۲۱-۱۲۳۴۵۶۷۸
+              تلفن: ۰۹۱۰۹۹۰۳۱۳۶
             </p>
           </div>
         </div>

@@ -316,7 +316,7 @@ ${isValidDiscount ? `مجموع کل: ${baseTotal}\nتخفیف (۵٪): ${discoun
                     onChange={handleInputChange}
                     required
                     className={styles.input}
-                    placeholder="09123456789"
+                    placeholder="09109903136"
                   />
                 </div>
 
