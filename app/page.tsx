@@ -1,14 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './page.module.css'
 import Link from 'next/link'
 import { useCart } from '@/contexts/CartContext'
+import { fetchProductsClient, WordPressProduct } from '@/lib/wordpress'
 import productsData from '@/data/products.json'
 import Toast from '@/components/Toast'
 import bgImage from '@/assets/img/bg.jpg'
 
-// Import product images directly
+// Import product images directly (fallback)
 import image1 from '@/assets/img/1.jpg'
 import image2 from '@/assets/img/2.jpg'
 import image3 from '@/assets/img/d.webp'
@@ -16,15 +17,10 @@ import imageZe from '@/assets/img/ze.jpg'
 import imageA from '@/assets/img/a.jpg'
 import imageHa from '@/assets/img/ha.jpg'
 
-// Type definition for products
-interface Product {
-  id: number
-  name: string
-  description: string
-  price: string
+// Type definition for products (compatible with both WordPress and JSON)
+type Product = WordPressProduct & {
   weight: string
   grade: string
-  image: string
 }
 
 // Helper function to get image src (handles both string and StaticImageData)
@@ -33,7 +29,7 @@ const getImageSrc = (img: string | { src: string }): string => {
   return img.src
 }
 
-// Map image paths to imported images
+// Map image paths to imported images (fallback for local images)
 const imageMap: { [key: string]: string } = {
   '/img/1.jpg': getImageSrc(image1 as any),
   '/img/2.jpg': getImageSrc(image2 as any),
@@ -43,7 +39,8 @@ const imageMap: { [key: string]: string } = {
   '/img/ha.jpg': getImageSrc(imageHa as any),
 }
 
-const products: Product[] = productsData.map(product => {
+// Fallback products from JSON
+const fallbackProducts: Product[] = productsData.map(product => {
   const mappedImage = imageMap[product.image] || product.image
   return {
     ...product,
@@ -55,6 +52,34 @@ export default function Home() {
   const { addToCart, cart, updateQuantity } = useCart()
   const [toastMessage, setToastMessage] = useState('')
   const [showToast, setShowToast] = useState(false)
+  const [products, setProducts] = useState<Product[]>(fallbackProducts)
+
+  // Fetch products from WordPress on mount
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const wpProducts = await fetchProductsClient()
+        
+        if (wpProducts && wpProducts.length > 0) {
+          // Transform WordPress products to match our Product type
+          const transformedProducts: Product[] = wpProducts.map((wp: WordPressProduct) => ({
+            ...wp,
+            weight: wp.weight || '',
+            grade: wp.grade || '',
+            // Clean HTML from description if needed
+            description: wp.description.replace(/<[^>]*>/g, '').trim() || wp.description,
+          }))
+          setProducts(transformedProducts)
+        }
+        // If no WordPress products, keep fallback
+      } catch (err) {
+        console.error('Error loading products from WordPress:', err)
+        // Keep fallback products on error
+      }
+    }
+
+    loadProducts()
+  }, [])
 
   const handleAddToCart = (product: typeof products[0]) => {
     addToCart({

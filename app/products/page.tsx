@@ -1,13 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useCart } from '@/contexts/CartContext'
+import { fetchProductsClient, WordPressProduct } from '@/lib/wordpress'
 import productsData from '@/data/products.json'
 import Toast from '@/components/Toast'
 import styles from './page.module.css'
 
-// Import product images directly
+// Import product images directly (fallback)
 import image1 from '@/assets/img/1.jpg'
 import image2 from '@/assets/img/2.jpg'
 import image3 from '@/assets/img/d.webp'
@@ -15,15 +16,10 @@ import imageZe from '@/assets/img/ze.jpg'
 import imageA from '@/assets/img/a.jpg'
 import imageHa from '@/assets/img/ha.jpg'
 
-// Type definition for products
-interface Product {
-  id: number
-  name: string
-  description: string
-  price: string
+// Type definition for products (compatible with both WordPress and JSON)
+type Product = WordPressProduct & {
   weight: string
   grade: string
-  image: string
 }
 
 // Helper function to get image src (handles both string and StaticImageData)
@@ -32,7 +28,7 @@ const getImageSrc = (img: string | { src: string }): string => {
   return img.src
 }
 
-// Map image paths to imported images
+// Map image paths to imported images (fallback for local images)
 const imageMap: { [key: string]: string } = {
   '/img/1.jpg': getImageSrc(image1 as any),
   '/img/2.jpg': getImageSrc(image2 as any),
@@ -42,12 +38,9 @@ const imageMap: { [key: string]: string } = {
   '/img/ha.jpg': getImageSrc(imageHa as any),
 }
 
-const products: Product[] = productsData.map(product => {
+// Fallback products from JSON
+const fallbackProducts: Product[] = productsData.map(product => {
   const mappedImage = imageMap[product.image] || product.image
-  // Debug: log image paths
-  if (typeof window !== 'undefined') {
-    console.log(`Product ${product.id} image:`, product.image, '->', mappedImage)
-  }
   return {
     ...product,
     image: mappedImage
@@ -58,6 +51,46 @@ export default function Products() {
   const { addToCart, cart, updateQuantity, getTotalItems } = useCart()
   const [toastMessage, setToastMessage] = useState('')
   const [showToast, setShowToast] = useState(false)
+  const [products, setProducts] = useState<Product[]>(fallbackProducts)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fetch products from WordPress on mount
+  useEffect(() => {
+    const loadProducts = async () => {
+      setIsLoading(true)
+      setError(null)
+      
+      try {
+        const wpProducts = await fetchProductsClient()
+        
+        if (wpProducts && wpProducts.length > 0) {
+          // Transform WordPress products to match our Product type
+          const transformedProducts: Product[] = wpProducts.map((wp: WordPressProduct) => ({
+            ...wp,
+            weight: wp.weight || '',
+            grade: wp.grade || '',
+            // Clean HTML from description if needed
+            description: wp.description.replace(/<[^>]*>/g, '').trim() || wp.description,
+          }))
+          setProducts(transformedProducts)
+        } else {
+          // If no WordPress products, use fallback
+          console.log('No WordPress products found, using fallback data')
+          setProducts(fallbackProducts)
+        }
+      } catch (err) {
+        console.error('Error loading products from WordPress:', err)
+        setError('خطا در بارگذاری محصولات')
+        // Use fallback products on error
+        setProducts(fallbackProducts)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadProducts()
+  }, [])
 
   const handleAddToCart = (product: typeof products[0]) => {
     addToCart({
@@ -96,6 +129,24 @@ export default function Products() {
 
       <section className="section">
         <div className="container">
+          {isLoading && (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <p>در حال بارگذاری محصولات...</p>
+            </div>
+          )}
+          
+          {error && !isLoading && (
+            <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--error, red)' }}>
+              <p>{error}</p>
+            </div>
+          )}
+
+          {!isLoading && !error && products.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <p>محصولی یافت نشد</p>
+            </div>
+          )}
+
           <div className={styles.productsGrid}>
             {products.map((product) => (
               <div key={product.id} className={styles.productCard}>
