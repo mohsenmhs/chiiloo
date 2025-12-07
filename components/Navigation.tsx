@@ -58,6 +58,7 @@ export default function Navigation() {
           <li><Link href="/" onClick={() => setIsMenuOpen(false)}>خانه</Link></li>
           <li><Link href="/about/" onClick={() => setIsMenuOpen(false)}>درباره ما</Link></li>
           <li><Link href="/products/" onClick={() => setIsMenuOpen(false)}>محصولات</Link></li>
+          <li><Link href="/track/" onClick={() => setIsMenuOpen(false)}>پیگیری سفارش</Link></li>
           <li>
             <Link 
               href="/cart/" 

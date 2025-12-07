@@ -3,59 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useCart } from '@/contexts/CartContext'
-import productsData from '@/data/products.json'
+import { useProducts } from '@/lib/hooks/useProducts'
 import Toast from '@/components/Toast'
 import styles from './page.module.css'
 
-// Import product images directly
-import image1 from '@/assets/img/1.jpg'
-import image2 from '@/assets/img/2.jpg'
-import image3 from '@/assets/img/d.webp'
-import imageZe from '@/assets/img/ze.jpg'
-import imageA from '@/assets/img/a.jpg'
-import imageHa from '@/assets/img/ha.jpg'
-
-// Type definition for products
-interface Product {
-  id: number
-  name: string
-  description: string
-  price: string
-  weight: string
-  grade: string
-  image: string
-}
-
-// Helper function to get image src (handles both string and StaticImageData)
-const getImageSrc = (img: string | { src: string }): string => {
-  if (typeof img === 'string') return img
-  return img.src
-}
-
-// Map image paths to imported images
-const imageMap: { [key: string]: string } = {
-  '/img/1.jpg': getImageSrc(image1 as any),
-  '/img/2.jpg': getImageSrc(image2 as any),
-  '/img/d.webp': getImageSrc(image3 as any),
-  '/img/ze.jpg': getImageSrc(imageZe as any),
-  '/img/a.jpg': getImageSrc(imageA as any),
-  '/img/ha.jpg': getImageSrc(imageHa as any),
-}
-
-const products: Product[] = productsData.map(product => {
-  const mappedImage = imageMap[product.image] || product.image
-  // Debug: log image paths
-  if (typeof window !== 'undefined') {
-    console.log(`Product ${product.id} image:`, product.image, '->', mappedImage)
-  }
-  return {
-    ...product,
-    image: mappedImage
-  }
-})
-
 export default function Products() {
   const { addToCart, cart, updateQuantity, getTotalItems } = useCart()
+  const { products, loading } = useProducts()
   const [toastMessage, setToastMessage] = useState('')
   const [showToast, setShowToast] = useState(false)
 
@@ -96,6 +50,9 @@ export default function Products() {
 
       <section className="section">
         <div className="container">
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>در حال بارگذاری محصولات...</div>
+          ) : (
           <div className={styles.productsGrid}>
             {products.map((product) => (
               <div key={product.id} className={styles.productCard}>
@@ -174,6 +131,7 @@ export default function Products() {
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
 

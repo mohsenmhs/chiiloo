@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useCart } from '@/contexts/CartContext'
+import { supabase, OrderItem, OrderStatus } from '@/lib/supabase'
 import styles from './page.module.css'
 
 // Dynamically import EmailJS to handle cases where it's not installed
@@ -12,6 +13,33 @@ if (typeof window !== 'undefined') {
   } catch (e) {
     console.warn('EmailJS is not installed. Please run: npm install @emailjs/browser')
   }
+}
+
+// Helper function to convert Persian/Arabic digits to ASCII
+const persianToEnglish = (str: string): string => {
+  const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
+  let result = str
+  
+  persianDigits.forEach((persian, index) => {
+    result = result.replace(new RegExp(persian, 'g'), index.toString())
+  })
+  
+  arabicDigits.forEach((arabic, index) => {
+    result = result.replace(new RegExp(arabic, 'g'), index.toString())
+  })
+  
+  return result
+}
+
+// Generate tracking code
+const generateTrackingCode = (): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let result = ''
+  for (let i = 0; i < 8; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return result
 }
 
 export default function Cart() {
@@ -27,11 +55,19 @@ export default function Cart() {
   const [appliedDiscountCode, setAppliedDiscountCode] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [trackingCode, setTrackingCode] = useState<string | null>(null)
   
   const isValidDiscount = appliedDiscountCode?.toLowerCase().trim() === 'khodadadiestend'
   const discountAmount = getDiscountAmount(isValidDiscount ? appliedDiscountCode : undefined)
   const baseTotal = getTotalPrice()
   const finalTotal = getFinalPrice(isValidDiscount ? appliedDiscountCode : undefined)
+  
+  // Calculate numeric prices for database
+  const calculateNumericPrice = (priceStr: string): number => {
+    const converted = persianToEnglish(priceStr)
+    const priceNum = parseInt(converted.replace(/[^\d]/g, '')) || 0
+    return priceNum
+  }
 
   const handleApplyDiscount = () => {
     const code = discountCode.toLowerCase().trim()
@@ -58,17 +94,74 @@ export default function Cart() {
 
     setIsSubmitting(true)
     setSubmitStatus('idle')
+    setTrackingCode(null)
 
     try {
-      // Prepare order details
-      const orderItems = cart.map((item) => 
-        `${item.name} - ${item.weight} - ${item.quantity} عدد - ${item.price}`
-      ).join('\n')
+      // Generate tracking code
+      const newTrackingCode = generateTrackingCode()
+      
+      // Prepare order items for database
+      const orderItems: OrderItem[] = cart.map((item) => ({
+        product_id: item.id,
+        product_name: item.name,
+        product_weight: item.weight,
+        product_grade: item.grade,
+        quantity: item.quantity,
+        price: item.price,
+      }))
 
-      const orderDetails = `
+      // Calculate numeric prices
+      const totalPriceNum = cart.reduce((sum, item) => {
+        const priceNum = calculateNumericPrice(item.price)
+        return sum + priceNum * item.quantity
+      }, 0)
+      
+      const discountAmountNum = isValidDiscount ? discountAmount : 0
+      const finalPriceNum = totalPriceNum - discountAmountNum
+
+      // Save order to Supabase
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          tracking_code: newTrackingCode,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          phone: formData.phone,
+          address: formData.address,
+          notes: formData.notes || null,
+          items: orderItems,
+          total_price: totalPriceNum,
+          discount_code: isValidDiscount ? appliedDiscountCode : null,
+          discount_amount: discountAmountNum,
+          final_price: finalPriceNum,
+          status: 'pending' as OrderStatus,
+        })
+        .select()
+        .single()
+
+      if (orderError) {
+        throw new Error(`خطا در ثبت سفارش: ${orderError.message}`)
+      }
+
+      // Optionally send email via EmailJS if configured
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+      if (emailjs && serviceId && templateId && publicKey && 
+          serviceId !== 'YOUR_SERVICE_ID' && 
+          templateId !== 'YOUR_TEMPLATE_ID' && 
+          publicKey !== 'YOUR_PUBLIC_KEY') {
+        try {
+          const orderItems = cart.map((item) => 
+            `${item.name} - ${item.weight} - ${item.quantity} عدد - ${item.price}`
+          ).join('\n')
+
+          const orderDetails = `
 نام و نام خانوادگی: ${formData.firstName} ${formData.lastName}
 شماره تماس: ${formData.phone}
 آدرس: ${formData.address}
+کد پیگیری: ${newTrackingCode}
 ${formData.notes ? `توضیحات: ${formData.notes}` : ''}
 ${isValidDiscount ? `کد تخفیف: ${appliedDiscountCode}` : ''}
 
@@ -76,43 +169,33 @@ ${isValidDiscount ? `کد تخفیف: ${appliedDiscountCode}` : ''}
 ${orderItems}
 
 ${isValidDiscount ? `مجموع کل: ${baseTotal}\nتخفیف (۵٪): ${discountAmount.toLocaleString('fa-IR')} تومان\nمبلغ نهایی: ${finalTotal}` : `مجموع کل: ${finalTotal}`}
-      `.trim()
+          `.trim()
 
-      // EmailJS configuration
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-
-      if (!emailjs) {
-        throw new Error('EmailJS package is not installed. Please run: npm install @emailjs/browser')
+          await emailjs.send(
+            serviceId,
+            templateId,
+            {
+              to_email: 'mohsen.kh87@gmail.com',
+              from_name: `${formData.firstName} ${formData.lastName}`,
+              message: orderDetails,
+              phone: formData.phone,
+              address: formData.address,
+              notes: formData.notes || 'بدون توضیحات',
+              discount_code: isValidDiscount ? appliedDiscountCode : '',
+              discount_amount: isValidDiscount ? discountAmount.toLocaleString('fa-IR') + ' تومان' : '0',
+              order_total: finalTotal,
+              base_total: baseTotal,
+              tracking_code: newTrackingCode,
+            },
+            publicKey
+          )
+        } catch (emailError) {
+          // Don't fail the order if email fails
+          console.warn('Failed to send email notification:', emailError)
+        }
       }
 
-      if (!serviceId || !templateId || !publicKey || 
-          serviceId === 'YOUR_SERVICE_ID' || 
-          templateId === 'YOUR_TEMPLATE_ID' || 
-          publicKey === 'YOUR_PUBLIC_KEY') {
-        throw new Error('EmailJS is not configured. Please check SETUP_EMAILJS.md for instructions.')
-      }
-
-      // Send email using EmailJS
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          to_email: 'mohsen.kh87@gmail.com',
-          from_name: `${formData.firstName} ${formData.lastName}`,
-          message: orderDetails,
-          phone: formData.phone,
-          address: formData.address,
-          notes: formData.notes || 'بدون توضیحات',
-          discount_code: isValidDiscount ? appliedDiscountCode : '',
-          discount_amount: isValidDiscount ? discountAmount.toLocaleString('fa-IR') + ' تومان' : '0',
-          order_total: finalTotal,
-          base_total: baseTotal,
-        },
-        publicKey
-      )
-
+      setTrackingCode(newTrackingCode)
       setSubmitStatus('success')
       clearCart()
       setFormData({
@@ -125,13 +208,9 @@ ${isValidDiscount ? `مجموع کل: ${baseTotal}\nتخفیف (۵٪): ${discoun
       setDiscountCode('')
       setAppliedDiscountCode(null)
     } catch (error: any) {
-      console.error('Error sending email:', error)
-      const errorMessage = error?.message || 'خطا در ارسال سفارش'
-      if (errorMessage.includes('EmailJS is not configured') || errorMessage.includes('SETUP_EMAILJS')) {
-        alert('لطفاً ابتدا EmailJS را راه‌اندازی کنید. فایل SETUP_EMAILJS.md را مطالعه کنید.')
-      } else if (errorMessage.includes('not installed')) {
-        alert('لطفاً ابتدا پکیج EmailJS را نصب کنید: npm install @emailjs/browser')
-      }
+      console.error('Error submitting order:', error)
+      const errorMessage = error?.message || 'خطا در ثبت سفارش'
+      alert(errorMessage)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -158,10 +237,24 @@ ${isValidDiscount ? `مجموع کل: ${baseTotal}\nتخفیف (۵٪): ${discoun
         <div className="container">
           <div className={styles.successContent}>
             <h1 className={styles.successTitle}>سفارش شما با موفقیت ثبت شد!</h1>
+            {trackingCode && (
+              <div style={{ margin: '1.5rem 0', padding: '1rem', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}>
+                <p style={{ marginBottom: '0.5rem', fontWeight: 'bold' }}>کد پیگیری سفارش:</p>
+                <p style={{ fontSize: '1.5rem', fontFamily: 'monospace', letterSpacing: '0.2em' }}>{trackingCode}</p>
+                <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', opacity: 0.9 }}>
+                  می‌توانید با این کد یا شماره تماس خود وضعیت سفارش را پیگیری کنید.
+                </p>
+              </div>
+            )}
             <p className={styles.successText}>
               سفارش شما دریافت شد و به زودی با شما تماس خواهیم گرفت.
             </p>
-            <a href="/products/" className="btn btn-primary">بازگشت به محصولات</a>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              {trackingCode && (
+                <a href={`/track?code=${trackingCode}`} className="btn btn-secondary">پیگیری سفارش</a>
+              )}
+              <a href="/products/" className="btn btn-primary">بازگشت به محصولات</a>
+            </div>
           </div>
         </div>
       </div>

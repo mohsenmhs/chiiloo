@@ -1,0 +1,248 @@
+.header {
+  background: linear-gradient(135deg, var(--saffron-purple) 0%, var(--saffron-gold) 100%);
+  padding: 2rem 0;
+  color: var(--white);
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0;
+}
+
+.logoutBtn {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--white);
+  border-radius: 8px;
+  color: var(--white);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logoutBtn:hover {
+  background: var(--white);
+  color: var(--saffron-purple);
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  padding: 0.75rem 1.5rem;
+  background: var(--white);
+  border: 2px solid var(--light-gray);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  color: var(--text-gray);
+}
+
+.filterBtn:hover {
+  border-color: var(--saffron-purple);
+  color: var(--saffron-purple);
+}
+
+.activeFilter {
+  background: var(--saffron-purple);
+  color: var(--white);
+  border-color: var(--saffron-purple);
+}
+
+.loading,
+.error,
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: var(--text-gray);
+}
+
+.error {
+  color: #c62828;
+  background: #ffebee;
+  border-radius: 8px;
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.orderCard {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--light-gray);
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--light-gray);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.orderTitle {
+  font-size: 1.5rem;
+  color: var(--saffron-purple);
+  margin: 0 0 0.5rem 0;
+}
+
+.orderDate {
+  color: var(--text-gray);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.orderActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.statusSelect {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--light-gray);
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--dark-gray);
+  min-width: 180px;
+}
+
+.statusSelect:focus {
+  outline: none;
+  border-color: var(--saffron-purple);
+}
+
+.statusSelect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.orderInfo {
+  margin-bottom: 1.5rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.infoLabel {
+  font-weight: 600;
+  color: var(--text-gray);
+  font-size: 0.9rem;
+}
+
+.infoValue {
+  color: var(--dark-gray);
+  font-size: 1rem;
+}
+
+.orderItems {
+  margin-bottom: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--light-gray);
+}
+
+.itemsTitle {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--saffron-purple);
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.itemRow {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--light-gray);
+  border-radius: 6px;
+  align-items: center;
+}
+
+.orderSummary {
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--light-gray);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: var(--text-gray);
+}
+
+.finalRow {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--saffron-purple);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 2px solid var(--saffron-purple);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .orderCard {
+    padding: 1.5rem;
+  }
+
+  .orderHeader {
+    flex-direction: column;
+  }
+
+  .statusSelect {
+    width: 100%;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .itemRow {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
