@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase, Order, OrderStatus } from "@/lib/supabase";
 import styles from "./page.module.css";
@@ -125,7 +125,7 @@ function OrderDetails({ order }: { order: Order }) {
   );
 }
 
-export default function TrackOrder() {
+function TrackOrderContent() {
   const searchParams = useSearchParams();
   const [searchType, setSearchType] = useState<"code" | "phone">("code");
   const [trackingCode, setTrackingCode] = useState("");
@@ -302,5 +302,17 @@ export default function TrackOrder() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function TrackOrder() {
+  return (
+    <Suspense fallback={
+      <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+        <div>در حال بارگذاری...</div>
+      </div>
+    }>
+      <TrackOrderContent />
+    </Suspense>
   );
 }

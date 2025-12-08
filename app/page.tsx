@@ -78,7 +78,7 @@ export default function Home() {
                 const cartItem = cart.find(item => item.id === product.id)
                 return (
                   <div key={product.id} className={styles.heroProductCard}>
-                    <Link href={`/products/${product.slug}`} className={styles.heroProductImageLink}>
+                    <Link href={`/products/${encodeURIComponent(product.slug)}`} className={styles.heroProductImageLink}>
                       <div className={styles.heroProductImage}>
                         <img
                           src={product.image}
@@ -90,7 +90,7 @@ export default function Home() {
                       </div>
                     </Link>
                     <div className={styles.heroProductInfo}>
-                      <Link href={`/products/${product.slug}`} className={styles.heroProductNameLink}>
+                      <Link href={`/products/${encodeURIComponent(product.slug)}`} className={styles.heroProductNameLink}>
                         <h3 className={styles.heroProductName}>{product.name}</h3>
                       </Link>
                       <div className={styles.heroProductDetails}>

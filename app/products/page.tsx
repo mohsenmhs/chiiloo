@@ -56,7 +56,7 @@ export default function Products() {
           <div className={styles.productsGrid}>
             {products.map((product) => (
               <div key={product.id} className={styles.productCard}>
-                <Link href={`/products/${product.slug}`} className={styles.productImageLink}>
+                <Link href={`/products/${encodeURIComponent(product.slug)}`} className={styles.productImageLink}>
                   <div className={styles.productImage}>
                     <img
                       src={product.image}
@@ -84,7 +84,7 @@ export default function Products() {
                   </div>
                 </Link>
                 <div className={styles.productInfo}>
-                  <Link href={`/products/${product.slug}`} className={styles.productNameLink}>
+                  <Link href={`/products/${encodeURIComponent(product.slug)}`} className={styles.productNameLink}>
                     <h3 className={styles.productName}>{product.name}</h3>
                   </Link>
                   <p className={styles.productDescription}>{product.description}</p>

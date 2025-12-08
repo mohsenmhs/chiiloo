@@ -59,7 +59,7 @@ export async function generateStaticParams() {
     console.log('Using fallback slugs due to error')
     // Use fallback slugs if database query fails
     return FALLBACK_SLUGS.map((slug) => ({
-      slug: slug.trim(),
+      slug: encodeURIComponent(slug.trim()),
     }))
   }
 }

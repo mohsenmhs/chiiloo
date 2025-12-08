@@ -1,6 +1,11 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
 
 export default function NotFound() {
+  const [isHovered, setIsHovered] = useState(false)
+
   return (
     <div style={{ 
       textAlign: 'center', 
@@ -44,14 +49,11 @@ export default function NotFound() {
           textDecoration: 'none',
           fontWeight: 600,
           fontSize: '1.1rem',
-          transition: 'transform 0.3s ease'
+          transition: 'transform 0.3s ease',
+          transform: isHovered ? 'translateY(-2px)' : 'translateY(0)'
         }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-2px)'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)'
-        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         بازگشت به محصولات
       </Link>
