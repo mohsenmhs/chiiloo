@@ -32,14 +32,13 @@ const persianToEnglish = (str: string): string => {
   return result
 }
 
-// Generate tracking code
+// Generate tracking code as a 10-digit number
 const generateTrackingCode = (): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  let result = ''
-  for (let i = 0; i < 8; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return result
+  // Generate a random number between 1000000000 and 9999999999 (10 digits)
+  const min = 1000000000
+  const max = 9999999999
+  const trackingCode = Math.floor(Math.random() * (max - min + 1)) + min
+  return trackingCode.toString()
 }
 
 export default function Cart() {

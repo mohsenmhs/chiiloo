@@ -13,11 +13,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export interface Product {
   id: number
   name: string
+  slug: string
   description: string
   price: string
   weight: string
   grade: string
   image: string
+  active: boolean
+  special: boolean
   created_at?: string
   updated_at?: string
 }

@@ -5,11 +5,14 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
   description TEXT NOT NULL,
   price TEXT NOT NULL,
   weight TEXT NOT NULL,
   grade TEXT NOT NULL,
   image TEXT NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT true,
+  special BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
@@ -38,6 +41,10 @@ CREATE INDEX IF NOT EXISTS idx_orders_tracking_code ON orders(tracking_code);
 CREATE INDEX IF NOT EXISTS idx_orders_phone ON orders(phone);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_products_active ON products(active);
+CREATE INDEX IF NOT EXISTS idx_products_special ON products(special);
+CREATE INDEX IF NOT EXISTS idx_products_active_special ON products(active, special);
+CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()

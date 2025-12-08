@@ -4,7 +4,7 @@ import { useState } from 'react'
 import styles from './page.module.css'
 import Link from 'next/link'
 import { useCart } from '@/contexts/CartContext'
-import { useProducts } from '@/lib/hooks/useProducts'
+import { useSpecialProducts } from '@/lib/hooks/useProducts'
 import Toast from '@/components/Toast'
 import bgImage from '@/assets/img/bg.jpg'
 
@@ -16,7 +16,7 @@ const getImageSrc = (img: string | { src: string }): string => {
 
 export default function Home() {
   const { addToCart, cart, updateQuantity } = useCart()
-  const { products, loading } = useProducts()
+  const { products, loading } = useSpecialProducts()
   const [toastMessage, setToastMessage] = useState('')
   const [showToast, setShowToast] = useState(false)
 
@@ -78,17 +78,21 @@ export default function Home() {
                 const cartItem = cart.find(item => item.id === product.id)
                 return (
                   <div key={product.id} className={styles.heroProductCard}>
-                    <div className={styles.heroProductImage}>
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className={styles.heroProductImageContent}
-                        loading="lazy"
-                      />
-                      <div className={styles.heroProductBadge}>{product.grade}</div>
-                    </div>
+                    <Link href={`/products/${product.slug}`} className={styles.heroProductImageLink}>
+                      <div className={styles.heroProductImage}>
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className={styles.heroProductImageContent}
+                          loading="lazy"
+                        />
+                        <div className={styles.heroProductBadge}>{product.grade}</div>
+                      </div>
+                    </Link>
                     <div className={styles.heroProductInfo}>
-                      <h3 className={styles.heroProductName}>{product.name}</h3>
+                      <Link href={`/products/${product.slug}`} className={styles.heroProductNameLink}>
+                        <h3 className={styles.heroProductName}>{product.name}</h3>
+                      </Link>
                       <div className={styles.heroProductDetails}>
                         <span className={styles.heroProductWeight}>{product.weight}</span>
                         <span className={styles.heroProductPrice}>{product.price}</span>

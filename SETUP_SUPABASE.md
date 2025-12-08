@@ -41,10 +41,14 @@ You can insert products in two ways:
 Run this SQL in the SQL Editor (update with your actual product data):
 
 ```sql
-INSERT INTO products (name, description, price, weight, grade, image) VALUES
-('زعفران سرگل', 'زعفران سرگل ممتاز با وزن یک مثقال (4.6 گرم)', '۱,۰۰۰,۰۰۰ تومان', '۴.۶ گرم (یک مثقال)', 'ممتاز', '/img/1.jpg'),
-('زعفران سرگل', 'زعفران سرگل با کیفیت عالی در بسته‌بندی دو گرمی', '۵۵۰,۰۰۰ تومان', '۲ گرم', 'ممتاز', '/img/2.jpg');
+INSERT INTO products (name, description, price, weight, grade, image, active, special) VALUES
+('زعفران سرگل', 'زعفران سرگل ممتاز با وزن یک مثقال (4.6 گرم)', '۱,۰۰۰,۰۰۰ تومان', '۴.۶ گرم (یک مثقال)', 'ممتاز', '/img/1.jpg', true, true),
+('زعفران سرگل', 'زعفران سرگل با کیفیت عالی در بسته‌بندی دو گرمی', '۵۵۰,۰۰۰ تومان', '۲ گرم', 'ممتاز', '/img/2.jpg', true, false);
 ```
+
+**Note:** 
+- `active`: Set to `true` to show the product on the products page. Only active products are displayed.
+- `special`: Set to `true` to show the product on the home page. Only special and active products are shown on the home page.
 
 ## 6. Set Up Admin Authentication (Optional)
 

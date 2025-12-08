@@ -147,6 +147,12 @@
   box-shadow: 0 6px 20px rgba(220, 20, 60, 0.3);
 }
 
+.heroProductImageLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 .heroProductImage {
   height: 140px;
   background: linear-gradient(135deg, rgba(220, 20, 60, 0.1) 0%, rgba(106, 27, 154, 0.1) 100%);
@@ -155,6 +161,11 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.heroProductImageLink:hover .heroProductImage {
+  transform: scale(1.05);
 }
 
 .heroProductImageContent {
@@ -185,12 +196,22 @@
   flex-grow: 1;
 }
 
+.heroProductNameLink {
+  text-decoration: none;
+  color: inherit;
+}
+
 .heroProductName {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--saffron-purple);
   margin: 0;
   line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.heroProductNameLink:hover .heroProductName {
+  color: var(--saffron-red);
 }
 
 .heroProductDetails {

@@ -41,6 +41,7 @@ export function useProducts() {
         const { data, error: fetchError } = await supabase
           .from('products')
           .select('*')
+          .eq('active', true)
           .order('id', { ascending: true })
 
         if (fetchError) {
@@ -68,6 +69,54 @@ export function useProducts() {
     }
 
     fetchProducts()
+  }, [])
+
+  return { products, loading, error }
+}
+
+export function useSpecialProducts() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchSpecialProducts() {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const { data, error: fetchError } = await supabase
+          .from('products')
+          .select('*')
+          .eq('active', true)
+          .eq('special', true)
+          .order('id', { ascending: true })
+
+        if (fetchError) {
+          throw fetchError
+        }
+
+        // Map images to local assets
+        const mappedProducts = (data || []).map(product => {
+          const mappedImage = imageMap[product.image] || product.image
+          return {
+            ...product,
+            image: mappedImage
+          }
+        })
+
+        setProducts(mappedProducts)
+      } catch (err: any) {
+        console.error('Error fetching special products:', err)
+        setError(err.message || 'خطا در بارگذاری محصولات')
+        // Fallback to empty array on error
+        setProducts([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSpecialProducts()
   }, [])
 
   return { products, loading, error }

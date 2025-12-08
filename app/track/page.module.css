@@ -1,19 +1,19 @@
 .hero {
   background: linear-gradient(135deg, var(--saffron-purple) 0%, var(--saffron-gold) 100%);
-  padding: 4rem 0;
+  padding: 2rem 0;
   text-align: center;
   color: var(--white);
 }
 
 .heroTitle {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: var(--white);
 }
 
 .heroSubtitle {
-  font-size: 1.2rem;
+  font-size: 1rem;
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto;
@@ -259,11 +259,11 @@
 
 @media (max-width: 768px) {
   .heroTitle {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .heroSubtitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .searchCard,

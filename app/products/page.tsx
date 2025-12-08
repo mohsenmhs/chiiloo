@@ -56,33 +56,37 @@ export default function Products() {
           <div className={styles.productsGrid}>
             {products.map((product) => (
               <div key={product.id} className={styles.productCard}>
-                <div className={styles.productImage}>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className={styles.productImageContent}
-                    loading="lazy"
-                    onError={(e) => {
-                      // Fallback to placeholder if image fails to load
-                      console.error('Image failed to load:', product.image, 'for product:', product.name)
-                      const target = e.target as HTMLImageElement
-                      target.style.display = 'none'
-                      const parent = target.parentElement
-                      if (parent && !parent.querySelector(`.${styles.saffronIcon}`)) {
-                        const icon = document.createElement('div')
-                        icon.className = styles.saffronIcon
-                        icon.textContent = '🌿'
-                        parent.appendChild(icon)
-                      }
-                    }}
-                    onLoad={() => {
-                      console.log('Image loaded successfully:', product.image)
-                    }}
-                  />
-                  <div className={styles.productBadge}>{product.grade}</div>
-                </div>
+                <Link href={`/products/${product.slug}`} className={styles.productImageLink}>
+                  <div className={styles.productImage}>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className={styles.productImageContent}
+                      loading="lazy"
+                      onError={(e) => {
+                        // Fallback to placeholder if image fails to load
+                        console.error('Image failed to load:', product.image, 'for product:', product.name)
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                        const parent = target.parentElement
+                        if (parent && !parent.querySelector(`.${styles.saffronIcon}`)) {
+                          const icon = document.createElement('div')
+                          icon.className = styles.saffronIcon
+                          icon.textContent = '🌿'
+                          parent.appendChild(icon)
+                        }
+                      }}
+                      onLoad={() => {
+                        console.log('Image loaded successfully:', product.image)
+                      }}
+                    />
+                    <div className={styles.productBadge}>{product.grade}</div>
+                  </div>
+                </Link>
                 <div className={styles.productInfo}>
-                  <h3 className={styles.productName}>{product.name}</h3>
+                  <Link href={`/products/${product.slug}`} className={styles.productNameLink}>
+                    <h3 className={styles.productName}>{product.name}</h3>
+                  </Link>
                   <p className={styles.productDescription}>{product.description}</p>
                   <div className={styles.productDetails}>
                     <span className={styles.productWeight}>{product.weight}</span>
