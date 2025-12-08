@@ -1,9 +1,10 @@
 .hero {
-  background: linear-gradient(135deg, var(--saffron-purple) 0%, var(--saffron-gold) 100%);
+  background: linear-gradient(135deg, var(--saffron-red) 0%, var(--saffron-purple) 100%);
+  color: var(--white);
   padding: 2rem 0;
   text-align: center;
-  color: var(--white);
 }
+
 
 .heroTitle {
   font-size: 2rem;
@@ -30,69 +31,95 @@
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
+  border: 1px solid var(--gray-light);
 }
 
 .searchTabs {
   display: flex;
-  gap: 1rem;
+  flex-direction: row-reverse;
+  gap: 12px;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--light-gray);
 }
 
 .tab {
-  padding: 0.75rem 1.5rem;
-  background: none;
-  border: none;
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--gray-light);
+  background: var(--white);
   cursor: pointer;
   font-size: 1rem;
-  color: var(--text-gray);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
+  font-weight: 500;
   transition: all 0.3s ease;
+  border-radius: 8px;
+  text-align: center;
 }
 
-.tab:hover {
-  color: var(--saffron-purple);
+
+
+.inactiveTab {
+  color: var(--gray-dark);
+  background: var(--white);
+  border-color: var(--gray-light);
+}
+
+.inactiveTab:hover {
+  background: var(--gray-light);
 }
 
 .activeTab {
-  color: var(--saffron-purple);
-  border-bottom-color: var(--saffron-purple);
+  color: var(--white);
+  background: var(--saffron-purple);
+  border-color: var(--saffron-purple);
   font-weight: 600;
 }
 
 .searchForm {
   display: flex;
+  flex-direction: row-reverse;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-.inputGroup {
-  flex: 1;
-  min-width: 200px;
+.searchBtn {
+  flex: 0 0 auto;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, var(--saffron-red) 0%, var(--saffron-purple) 100%);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.searchBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
+.searchBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .input {
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--light-gray);
+  border: 2px solid var(--gray-light);
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
-  font-family: monospace;
-  text-align: center;
-  font-size: 1.1rem;
-  letter-spacing: 0.1em;
+  font-family: inherit;
+  text-align: right;
+  direction: rtl;
 }
 
 .input:focus {
   outline: none;
   border-color: var(--saffron-purple);
-}
-
-.searchBtn {
-  padding: 0.875rem 2rem;
-  white-space: nowrap;
 }
 
 .errorMessage {
@@ -109,6 +136,7 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--gray-light);
 }
 
 .orderHeader {
@@ -173,7 +201,7 @@
 
 .infoValue {
   color: var(--dark-gray);
-  text-align: left;
+  text-align: right;
   flex: 1;
 }
 
@@ -257,6 +285,70 @@
   border-top: 2px solid var(--saffron-purple);
 }
 
+/* Orders List (when multiple orders found) */
+.ordersList {
+  margin-bottom: 2rem;
+}
+
+.ordersListTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--saffron-purple);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.orderCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-light);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.orderCardTitle {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--saffron-purple);
+  font-weight: 700;
+}
+
+.orderCardDate {
+  font-size: 0.9rem;
+  color: var(--gray-dark);
+  margin: 0;
+}
+
+.orderCardSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.orderCardSummary strong {
+  color: var(--saffron-red);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* Make order cards clickable when in list */
+.ordersList .orderCard {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.ordersList .orderCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--saffron-purple);
+}
+
 @media (max-width: 768px) {
   .heroTitle {
     font-size: 1.75rem;
@@ -285,6 +377,10 @@
 
   .searchBtn {
     width: 100%;
+  }
+
+  .orderCardHeader {
+    flex-direction: column;
   }
 }
 

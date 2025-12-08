@@ -74,7 +74,7 @@ export default function Home() {
               <div style={{ textAlign: 'center', padding: '2rem' }}>در حال بارگذاری...</div>
             ) : (
             <div className={styles.heroProductsGrid}>
-              {products.slice(0, 5).map((product) => {
+              {products.map((product) => {
                 const cartItem = cart.find(item => item.id === product.id)
                 return (
                   <div key={product.id} className={styles.heroProductCard}>
